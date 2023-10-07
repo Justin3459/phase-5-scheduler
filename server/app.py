@@ -53,13 +53,18 @@ class Employee(Resource):
         )
         return response
     
-    class EmployeeByID(Resource):
-        def get(self,id):
-            response_json = singular_employee_schema.dump(Employee.query.filter_by(id=id).first())
+class EmployeeByID(Resource):
+    def get(self,id):
+        response_json = singular_employee_schema.dump(Employee.query.filter_by(id=id).first())
 
-            response = make_response(response_json,200,)
-            return response
+        response = make_response(response_json,200,)
+        return response
+    
+    def patch(self, id):
+        pass
 
+    def delete(self, id):
+        pass
 class JobSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Job
