@@ -13,6 +13,7 @@ class Employee(db.Model):
 
     def __repr__(self):
         return f'<Employee {self.first_name} {self.last_name}>'
+    
 class Job(db.Models):
     __tablename__ = 'job'
 
@@ -21,19 +22,24 @@ class Job(db.Models):
     
     def __repr__(self):
         return '<Job {self.title}>'
-#join table
-class EmployeeJob(db.Model):
+    
+class EmployeeJob(db.Model): #Join Table
     __tablename__ = 'employee_job'
 
     employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('employee.id'),primary_key= True)
     job_id = db.Column('job_id', db.Integer, db.Forgeignkey('job.id'), primary_key=True)
 
     def __repr__(self):
-        return f'<EmployeeJob {self.employee.firstname} {self.employee.last_name} - {self.job.title}'
+        return f'<EmployeeJob {self.employee.first_name} {self.employee.last_name} - {self.job.title}'
+
 class Availability(db.Models):
     __tablename__ = 'availability'
 
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'))
-    availability = db.Column(db.S)
-    pass
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    start_time = db.Column(db.DateTime, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return f'<Availability {self.first_name} {self.last_name} - {self.start_time} - {self.end_time}>'
