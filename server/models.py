@@ -9,7 +9,7 @@ class Employee(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    number = db.Column(db.String(10), nullable=False)
+    phone_number = db.Column(db.String(10), nullable=False)
 
     def __repr__(self):
         return f'<Employee {self.first_name} {self.last_name}>'
