@@ -2,7 +2,7 @@ from flask import Flask, request, make_response
 from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
-
+from flask_cors import CORS
 from models import db, Employee, Job, EmployeeJob, Availability
 
 app = Flask(__name__)
@@ -12,21 +12,52 @@ app.json.compact = False
 
 migrate = Migrate(app, db)
 db.init_app(app)
+CORS(app)
 
 api = Api(app)
 ma = Marshmallow(app)
+class JobSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Job
+
+    id = ma.auto_field()
+    title = ma.auto_field()
+
+singular_job_schema = JobSchema()
+#plural_job_schema = JobSchema(many=True)
+
+class AvailabilitySchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Availability 
+
+    id = ma.auto_field()
+    start_time = ma.auto_field()
+    end_time = ma.auto_field()
+    pass
+singular_availability_schema = AvailabilitySchema()
+#plural_availability_schema = AvailabilitySchema(many=True)
+
 
 class EmployeeSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Employee
     
+    id = ma.auto_field()
     first_name = ma.auto_field()
     last_name = ma.auto_field()
     email = ma.auto_field()
     phone_number = ma.auto_field()
+    job = ma.Nested(singular_job_schema)
+    start_time = ma.Nested(singular_availability_schema)
+    end_time = ma.Nested(singular_availability_schema)
 
 singular_employee_schema = EmployeeSchema()
 plural_employee_schema = EmployeeSchema(many=True)
+
+class EmployeeJobSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = EmployeeJob
+    pass 
 
 class Employee(Resource):
     def get(self):
@@ -65,19 +96,6 @@ class EmployeeByID(Resource):
 
     def delete(self, id):
         pass
-class JobSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Job
-    
-    title = ma.autofield()
-singular_job_schema = Job()
-plural_job_schema = Job(many=True)
 
-class EmployeeJobSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = EmployeeJob
-    
-    pass 
-
-class AvailabilitySchema(ma.SQLAlchemySchema):
-    pass
+if __name__ =='__main__':
+    app.run(port=5555, debug=True)

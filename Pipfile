@@ -6,6 +6,12 @@ name = "pypi"
 [packages]
 flask-sqlalchemy = "*"
 faker = "*"
+flask-cors = "*"
+flask-marshmallow = "*"
+flask-migrate = "*"
+flask-restful = "*"
+marshmallow-sqlalchemy = "*"
+sqlalchemy-orm = "*"
 
 [dev-packages]
 

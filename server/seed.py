@@ -2,10 +2,16 @@ from faker import Faker
 from app import app
 from models import db, Employee, Job, Availability, EmployeeJob
 import datetime
+from faker.provider import DynamicProvider
+
+restaurant_staff = DynamicProvider(
+    job = ["server", "kitchen", "manager"]
+)
 
 fake = Faker()
 
-with app.app_content():
+fake.add_provider(restaurant_staff)
+with app.app_context():
     print("Deleting all records...")
     Employee.query.delete()
     Job.query.delete()
@@ -32,3 +38,10 @@ with app.app_content():
             email = fake.email(),
             phone_number = fake.phone_number(),
         )
+        job = fake.restaurant_staff() #join to employee in model
+        employee.password_hash = employee.username + 'password'
+
+
+        employee.append(employee)
+    
+    db.session.add_all(employee)
