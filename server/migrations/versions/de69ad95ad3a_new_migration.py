@@ -1,8 +1,8 @@
-"""init
+"""new migration
 
-Revision ID: 128300a7e9d6
+Revision ID: de69ad95ad3a
 Revises: 
-Create Date: 2023-10-07 17:28:52.780042
+Create Date: 2023-10-10 11:11:51.321944
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '128300a7e9d6'
+revision = 'de69ad95ad3a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,8 +24,13 @@ def upgrade():
     sa.Column('last_name', sa.String(), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('phone_number', sa.String(length=10), nullable=False),
+    sa.Column('job', sa.String(length=80), nullable=False),
+    sa.Column('username', sa.String(), nullable=False),
+    sa.Column('password', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.UniqueConstraint('email'),
+    sa.UniqueConstraint('phone_number'),
+    sa.UniqueConstraint('username')
     )
     op.create_table('job',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -35,20 +40,18 @@ def upgrade():
     op.create_table('availability',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('employee_id', sa.Integer(), nullable=True),
-    sa.Column('job_id', sa.Integer(), nullable=True),
     sa.Column('start_time', sa.DateTime(), nullable=False),
     sa.Column('end_time', sa.DateTime(), nullable=False),
     sa.ForeignKeyConstraint(['employee_id'], ['employee.id'], ),
-    sa.ForeignKeyConstraint(['job_id'], ['job.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('employee_job',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('employee_id', sa.Integer(), nullable=False),
-    sa.Column('job_id', sa.Integer(), nullable=False),
+    sa.Column('employee_id', sa.Integer(), nullable=True),
+    sa.Column('job_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['employee_id'], ['employee.id'], ),
     sa.ForeignKeyConstraint(['job_id'], ['job.id'], ),
-    sa.PrimaryKeyConstraint('id', 'employee_id', 'job_id')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

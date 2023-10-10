@@ -3,7 +3,7 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from flask_cors import CORS
-from models import db, Employee, Job, EmployeeJob, Availability
+from models import db, Employee, Job, Availability
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///scheduler.db'
@@ -54,10 +54,10 @@ class EmployeeSchema(ma.SQLAlchemySchema):
 singular_employee_schema = EmployeeSchema()
 plural_employee_schema = EmployeeSchema(many=True)
 
-class EmployeeJobSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = EmployeeJob
-    pass 
+#class EmployeeJobSchema(ma.SQLAlchemySchema):
+ #   class Meta:
+  #      model = EmployeeJob
+   # pass 
 
 class Employee(Resource):
     def get(self):

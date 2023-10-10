@@ -1,12 +1,8 @@
 from faker import Faker
 from app import app
-from models import db, Employee, Job, Availability, EmployeeJob
+from models import db, Employee, Job, Availability
 import datetime
-#from faker.providers import DynamicProvider
 from faker.providers import BaseProvider
-
-#restaurant_staff = DynamicProvider(
-#    job = ["server", "kitchen", "manager"])
 
 class DynamicProvider(BaseProvider):
     def restaurant_staff(self):
@@ -29,11 +25,11 @@ with app.app_context():
     plural_username = []
 
     for i in range(20):
-
         username = fake.first_name()
 
         while username in username:
-            username = fake.first_name()
+            username = fake.first_name() + fake.last_name()
+            break
 
         plural_username.append(username)
 
@@ -43,11 +39,15 @@ with app.app_context():
             email = fake.email(),
             phone_number = fake.phone_number(),
         )
-        job = fake.restaurant_staff() #join to employee in model
-        employee.password_hash = employee.username + 'password'
 
-#need to use faker to append a random job to each employee. look into employee.job.append(job?)
-        employee.job = job
+        job = Job(
+            title = fake.restaurant_staff()
+        )
+        employee.password = 'password'
+        employee.username = username
+
+        employee.job = job.title
     
-        db.session.add_all(employee)
-db.session.commit()
+        db.session.add(employee)
+        db.session.add(job)
+        db.session.commit()
