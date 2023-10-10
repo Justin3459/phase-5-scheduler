@@ -1,6 +1,6 @@
 from faker import Faker
 from app import app
-from models import db, Employee, Job, Availability
+from models import db, Employee, Job, Availability, EmployeeJob
 import datetime
 from faker.providers import BaseProvider
 
@@ -25,7 +25,7 @@ with app.app_context():
     plural_username = []
 
     for i in range(20):
-        username = fake.first_name()
+        username = fake.first_name() + fake.last_name()
 
         while username in username:
             username = fake.first_name() + fake.last_name()
@@ -38,16 +38,26 @@ with app.app_context():
             last_name = fake.last_name(),
             email = fake.email(),
             phone_number = fake.phone_number(),
+            username = username,
+            password = 'password'
         )
 
         job = Job(
             title = fake.restaurant_staff()
         )
-        employee.password = 'password'
-        employee.username = username
+        #employee.password = 'password'
+        #employee.username = username
 
-        employee.job = job.title
-    
+        
         db.session.add(employee)
         db.session.add(job)
         db.session.commit()
+
+        employee_job = EmployeeJob(
+            employee_id=employee.id,
+            job_id=job.id
+        )
+        db.session.add(employee_job)
+        db.session.commit()
+        print(employee, employee_job, job)
+print('complete')

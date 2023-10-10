@@ -1,8 +1,8 @@
-"""new migration
+"""init with new join table
 
-Revision ID: de69ad95ad3a
+Revision ID: eb0d7b38c826
 Revises: 
-Create Date: 2023-10-10 11:11:51.321944
+Create Date: 2023-10-10 14:16:02.486934
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'de69ad95ad3a'
+revision = 'eb0d7b38c826'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,7 +24,6 @@ def upgrade():
     sa.Column('last_name', sa.String(), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('phone_number', sa.String(length=10), nullable=False),
-    sa.Column('job', sa.String(length=80), nullable=False),
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('password', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
@@ -46,12 +45,10 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('employee_job',
-    sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('employee_id', sa.Integer(), nullable=True),
     sa.Column('job_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['employee_id'], ['employee.id'], ),
-    sa.ForeignKeyConstraint(['job_id'], ['job.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['job_id'], ['job.id'], )
     )
     # ### end Alembic commands ###
 

@@ -4,13 +4,21 @@ from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
-#migrate = Migrate()
-#migrate.init_app(db, render_as_batch=True)
-
 employee_job = db.Table('employee_job',
                         db.Column('employee_id', db.Integer, db.ForeignKey('employee.id')),
                         db.Column('job_id', db.Integer, db.ForeignKey('job.id'))
 )
+
+class Job(db.Model):
+    __tablename__ = 'job'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    title = db.Column(db.String(), nullable=False)
+
+    def __repr__(self):
+        return f'<Job {self.title}>'
+    
 class Employee(db.Model):
     __tablename__ = 'employee'
 
@@ -20,35 +28,20 @@ class Employee(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone_number = db.Column(db.String(10), unique=True, nullable=False)
 
-    job_id = db.relationship('Job', secondary=employee_job, backref='employee')
+    job = db.relationship('Job', secondary=employee_job, backref=db.backref('employee'))
 
     username = db.Column(db.String(),unique=True, nullable=False)
     password = db.Column(db.String(),nullable=False)
 
     def __repr__(self):
         return f'<Employee {self.first_name} {self.last_name}>'
-    
-class Job(db.Model):
-    __tablename__ = 'job'
 
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(), nullable=False)
+class EmployeeJob(db.Model):
+    __tablename__ = 'employeesjobs'
 
-    def __repr__(self):
-        return '<Job {self.title}>'
-    
-#class EmployeeJob(db.Model): #Join Table
- #   __tablename__ = 'employee_job'
-#
- #   id = db.Column(db.Integer, primary_key=True)
-#
- #   employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('employee.id'))
-  #  job_id = db.Column('job_id', db.Integer, db.ForeignKey('job.id'))
+    employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), primary_key=True)
 
-   # job = db.relationship("Job", backref="Employee_job")
-    
-    #def __repr__(self):
-     #   return f'<EmployeeJob {self.employee_id} - {self.job.title}>' 
 class Availability(db.Model):
     __tablename__ = 'availability'
 

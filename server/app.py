@@ -16,6 +16,7 @@ CORS(app)
 
 api = Api(app)
 ma = Marshmallow(app)
+
 class JobSchema(ma.SQLAlchemySchema):
     class Meta:
         model = Job
@@ -58,7 +59,7 @@ plural_employee_schema = EmployeeSchema(many=True)
  #   class Meta:
   #      model = EmployeeJob
    # pass 
-
+app.route('/employee', methods=['GET', 'POST'])
 class Employee(Resource):
     def get(self):
         employee = Employee.query.all()
@@ -83,7 +84,6 @@ class Employee(Resource):
             201
         )
         return response
-    
 class EmployeeByID(Resource):
     def get(self,id):
         response_json = singular_employee_schema.dump(Employee.query.filter_by(id=id).first())
@@ -97,5 +97,6 @@ class EmployeeByID(Resource):
     def delete(self, id):
         pass
 
+api.add_resource(Employee)
 if __name__ =='__main__':
-    app.run(port=5555, debug=True)
+    app.run(port=5000, debug=True)
