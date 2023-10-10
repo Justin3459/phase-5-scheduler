@@ -49,8 +49,8 @@ class EmployeeSchema(ma.SQLAlchemySchema):
     email = ma.auto_field()
     phone_number = ma.auto_field()
     job = ma.Nested(singular_job_schema)
-    start_time = ma.Nested(singular_availability_schema)
-    end_time = ma.Nested(singular_availability_schema)
+    #start_time = ma.Nested(singular_availability_schema)
+    #end_time = ma.Nested(singular_availability_schema)
 
 singular_employee_schema = EmployeeSchema()
 plural_employee_schema = EmployeeSchema(many=True)
@@ -59,8 +59,7 @@ plural_employee_schema = EmployeeSchema(many=True)
  #   class Meta:
   #      model = EmployeeJob
    # pass 
-app.route('/employee', methods=['GET', 'POST'])
-class Employee(Resource):
+class Employees(Resource):
     def get(self):
         employee = Employee.query.all()
         response = make_response(
@@ -84,6 +83,8 @@ class Employee(Resource):
             201
         )
         return response
+api.add_resource(Employees, ('/employee'))
+
 class EmployeeByID(Resource):
     def get(self,id):
         response_json = singular_employee_schema.dump(Employee.query.filter_by(id=id).first())
@@ -95,8 +96,16 @@ class EmployeeByID(Resource):
         pass
 
     def delete(self, id):
-        pass
+        plural_employee = Employee.query.all()
+        employee = Employee.query.filter_by(id=id).first()
+        db.session.delete(employee)
+        db.session.commit()
 
-api.add_resource(Employee)
+        response = make_response(
+            plural_employee_schema.dump(plural_employee)
+        )
+        pass
+api.add_resource(EmployeeByID, ('/employee/<int:id>'))
+
 if __name__ =='__main__':
     app.run(port=5000, debug=True)
