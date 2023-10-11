@@ -93,7 +93,13 @@ class EmployeeByID(Resource):
         return response
     
     def patch(self, id):
-        pass
+        employee = Employee.query.filter_by(id=id).first()
+        data = request.get_json()
+        for k,v in data.items():
+            setattr(employee, k, v)
+        
+        db.session.commit()
+        return singular_employee_schema.dump(employee), 200 
 
     def delete(self, id):
         plural_employee = Employee.query.all()
@@ -101,9 +107,7 @@ class EmployeeByID(Resource):
         db.session.delete(employee)
         db.session.commit()
 
-        response = make_response(
-            plural_employee_schema.dump(plural_employee)
-        )
+        return {'message':'Employee deleted'},200
         pass
 api.add_resource(EmployeeByID, ('/employee/<int:id>'))
 
