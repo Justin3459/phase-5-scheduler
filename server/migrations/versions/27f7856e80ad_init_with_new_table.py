@@ -1,8 +1,8 @@
-"""init with new join table
+"""init with new table
 
-Revision ID: eb0d7b38c826
+Revision ID: 27f7856e80ad
 Revises: 
-Create Date: 2023-10-10 14:16:02.486934
+Create Date: 2023-10-13 18:05:37.647794
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'eb0d7b38c826'
+revision = '27f7856e80ad'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -45,10 +45,11 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('employee_job',
-    sa.Column('employee_id', sa.Integer(), nullable=True),
-    sa.Column('job_id', sa.Integer(), nullable=True),
+    sa.Column('employee_id', sa.Integer(), nullable=False),
+    sa.Column('job_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['employee_id'], ['employee.id'], ),
-    sa.ForeignKeyConstraint(['job_id'], ['job.id'], )
+    sa.ForeignKeyConstraint(['job_id'], ['job.id'], ),
+    sa.PrimaryKeyConstraint('employee_id', 'job_id')
     )
     # ### end Alembic commands ###
 

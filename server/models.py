@@ -1,12 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship, backref, validates
 from flask_migrate import Migrate
 
 db = SQLAlchemy()
 
 employee_job = db.Table('employee_job',
-                        db.Column('employee_id', db.Integer, db.ForeignKey('employee.id')),
-                        db.Column('job_id', db.Integer, db.ForeignKey('job.id'))
+                        db.Column('employee_id', db.Integer, db.ForeignKey('employee.id'), primary_key=True),
+                        db.Column('job_id', db.Integer, db.ForeignKey('job.id'), primary_key=True)
 )
 
 class Job(db.Model):
@@ -30,17 +30,23 @@ class Employee(db.Model):
 
     job = db.relationship('Job', secondary=employee_job, backref=db.backref('employee'))
 
-    username = db.Column(db.String(),unique=True, nullable=False)
+    username = db.Column(db.String(), unique=True, nullable=False)
     password = db.Column(db.String(),nullable=False)
 
+    #@validates('email')
+    #def validate_email(self, key, email):
+     #   if "@" not in email:
+      #      raise ValueError("Email needs @")
+       # return Employee
+        
     def __repr__(self):
         return f'<Employee {self.first_name} {self.last_name}>'
 
-class EmployeeJob(db.Model):
-    __tablename__ = 'employeesjobs'
+#class EmployeeJob(db.Model):
+ #   __tablename__ = 'employeesjobs'
 
-    employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), primary_key=True)
-    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), primary_key=True)
+  #  employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'), primary_key=True)
+   # job_id = db.Column(db.Integer, db.ForeignKey('job.id'), primary_key=True)
 
 class Availability(db.Model):
     __tablename__ = 'availability'
