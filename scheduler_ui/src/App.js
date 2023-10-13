@@ -28,27 +28,12 @@ function App() {
     fetch(`http://127.0.0.1:5000/employee/${id}`,{
       method: "PATCH",
     headers:{
-      "Content-Type": "application/json",
+      "Content-Type": "applicaiton/json",
     },
   body:JSON.stringify({
-    first_name : firstNameBody,
-    last_name : lastNameBody,
-    email : emailBody,
-    phone_number: phoneNumberBody,
+    
   })})
   }
-
-  const handlePost = (id) =>{
-    fetch('http://127.0.0.1:5000/employee',{
-      method:"POST",
-      headers:{
-        'content-type': 'application/json'},
-        body: JSON.stringify ({
-          first_name,
-          last_name,
-          email,
-          phone_number}),
-  })}
 
   const dialogRef = useRef(null);
   const onEmployeeAdd = (empAdd) => setEmployee([...employee, empAdd]);
