@@ -5,18 +5,10 @@ import Employee from './Employee'
 import Availability from './Availability'
 import Schedule from "./Schedule";
 import Search from "./Search";
-function NavBar(employee, setEmployee, dialogRef){
+function Header({employee, handleDelete, setEmployee, dialogRef}){
     const [activeTab, setActiveTab] = useState("allStaff");
     
-    const handleDelete = (id) => {
-        const filterEmployee = employee.filter((employee) => employee.id !== id);
-    fetch(`http://localhost:3000/employee/${id}`, {
-      method: "DELETE",
-    })
-      .then((r) => r.json())
-      .then(setEmployee(filterEmployee));
-  };
-
+  //return console.log(employee)
   return (
     <nav>
       <ul>
@@ -46,7 +38,7 @@ function NavBar(employee, setEmployee, dialogRef){
         <Route path="*" element={<Home />}></Route>
         <Route
             path="allStaff"
-            element={<Employee employee={employee} handleDelete={handleDelete} />}
+            element={<Employee employee={employee} setEmployee = {setEmployee} handleDelete={handleDelete} />}
         ></Route>
 
         <Route
@@ -68,4 +60,4 @@ function NavBar(employee, setEmployee, dialogRef){
   );
 };
 
-export default NavBar;
+export default Header;
