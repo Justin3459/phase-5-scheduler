@@ -5,8 +5,8 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 
 employee_job = db.Table('employee_job',
-                        db.Column('employee_id', db.Integer, db.ForeignKey('employee.id'), primary_key=True),
-                        db.Column('job_id', db.Integer, db.ForeignKey('job.id'), primary_key=True)
+                        db.Column('employee_id', db.Integer, db.ForeignKey('employee.id')),
+                        db.Column('job_id', db.Integer, db.ForeignKey('job.id'))
 )
 
 class Job(db.Model):
