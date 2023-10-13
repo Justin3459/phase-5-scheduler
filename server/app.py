@@ -88,8 +88,8 @@ api.add_resource(Employees, ('/employee'))
 class EmployeeByID(Resource):
     def get(self,id):
         response_json = singular_employee_schema.dump(Employee.query.filter_by(id=id).first())
-
         response = make_response(response_json,200,)
+
         return response
     
     def patch(self, id):
@@ -99,16 +99,15 @@ class EmployeeByID(Resource):
             setattr(employee, k, v)
         
         db.session.commit()
-        return singular_employee_schema.dump(employee), 200 
 
+        return singular_employee_schema.dump(employee), 200 
     def delete(self, id):
-        plural_employee = Employee.query.all()
         employee = Employee.query.filter_by(id=id).first()
         db.session.delete(employee)
         db.session.commit()
 
         return {'message':'Employee deleted'},200
-        pass
+    
 api.add_resource(EmployeeByID, ('/employee/<int:id>'))
 
 if __name__ =='__main__':
